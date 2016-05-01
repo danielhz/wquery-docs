@@ -11,8 +11,8 @@ email: daniel@degu.cl
 description: > # this means to ignore newlines until "baseurl:"
   Querying Wikidata: Comparing SPARQL, Relational and Graph Databases.
   This site contains a detailed description to make our experiments repeatable.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://www.dcc.uchile.cl/~dhernand/wquery/" # the base hostname & protocol for your site
+baseurl: "/~dhernand/wquery" # the subpath of your site, e.g. /blog
+url: "http://users.dcc.uchile.cl/~dhernand/wquery/" # the base hostname & protocol for your site
 
 # Build settings
 markdown: kramdown
