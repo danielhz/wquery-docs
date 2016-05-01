@@ -2,22 +2,18 @@
 layout: default
 ---
 
-<div class="home">
+This pages aims to make repeatable the experiments described in the paper
+*Querying Wikidata: Comparing SPARQL, Relational and Graph Databases* (by
+[Daniel Hernández](http://www.dcc.uchile.cl/~dhernand/),
+[Aidan Hogan](http://www.dcc.uchile.cl/~ahogan/),
+[Cristian Riveros](http://web.ing.puc.cl/~criveros/),
+Carlos Rojas and Enzo Zerega).
 
-  <h1 class="page-heading">Posts</h1>
+*Note:* This document is in writing process. If you have questions or
+suggestions about the experiments, please contact us.
 
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+# Experimental settings
 
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
-
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
-
-</div>
+**Machine:** All experiments were run on a single machine with 2× Intel Xeon
+Six Core E5-2609 V3 CPUs, 32GB of RAM, and 2× 1TB Seagate 7200 RPM
+32MB Cache SATA hard-disks in a RAID-1 configuration.
