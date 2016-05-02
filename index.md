@@ -49,18 +49,23 @@ $ git clone https://bitbucket.org/danielhz/wikidata-experiments.git
 ```      
 
 In that follows we call the folder `/home/$USER/wikidata-experiments` as
-`$RDF_HOME`.
+`$WD_HOME`.
 
+**Default graph:** In Virtuoso and Blazegraph the default dataset is always,
+assumed as the union of all named graphs. Thus, no specific configuration is
+needed to get this behavior with the named graphs schema.
 
-In Virtuoso and Blazegraph the default dataset is always, assumed as the union
-of all named graphs. Thus, no specific configuration is needed to get this
-behavior with the named graphs schema.
+**RDF schemas:** We use four schemas to model Wikidata using RDF: n-ary
+relations, named graphs, singleton properties and standard reification.
+We call this schemas as `naryrel`, `ngraphs`, `sgprop` and `stdreif`,
+respectively. Also, we use the environment name `$SCHEMA` for the current
+schema in RDF experiments.
 
 ## Virtuoso
 
-For each `$SCHEMA` in `naryrel`, `ngraphs`, `sgprop` and `stdreif` there is
-a directory `$RDF_HOME/dbfiles/virtuoso/db-$SCHEMA-1`. Initially, this folder
-contains only a file `virtuoso.ini` inside.
+For each `$SCHEMA` there is a directory
+`$WD_HOME/dbfiles/virtuoso/db-$SCHEMA-1`. Initially, this folder contains
+only a file `virtuoso.ini` inside.
 
 By default, Virtuoso stores the data in a folder in the `/` partition
 (that has not enough space). Inside this folder we create a symbolic link to
@@ -68,7 +73,7 @@ the database folder of each `$SCHEMA`.
 
 ```
 $ cd /usr/local/virtuoso-opensource/var/lib/virtuoso/
-$ ln -s $RDF_HOME/dbfiles/virtuoso/db-$SCHEMA-1 db-$SCHEMA-1
+$ ln -s $WD_HOME/dbfiles/virtuoso/db-$SCHEMA-1 db-$SCHEMA-1
 ```
 
 The following variables are set in `virtuoso.ini` file of each `$SCHEMA`.
@@ -91,3 +96,36 @@ evaluated.
 
 Finally, the `MaxQueryExecutionTime` is the timeout for query execution.
 Queries that exceed this timeout are aborted in runtime.
+
+## Blazegraph
+
+Blazegraph runs on top of the Java Virtual Machine (JVM). Thus, some parameters
+are added into the command line to improve the resource usage of the process.
+We set the JVM heap to 6GB and we use the G1 garbage collector
+off the Hostpot JVM (The JVM provides several garbage collectors).
+
+We use the `exec` primitive in a Ruby script to start Blazegraph
+with the following parameters:
+
+```
+exec(['java', 'blazegraph'],
+  '-Xmx6g',
+  '-XX:+UseG1GC',
+  '-Djetty.overrideWebXml=override.xml',
+  '-Dbigdata.propertyFile=server.properties',
+  '-jar',
+  'blazegraph.jar')
+```
+
+The override.xml file define a timeout of 60 seconds for query execution. And
+the server.properties define the parameters of the execution and properties of
+the storage. Both configuration files can be found in the code repository of
+this experiments.
+
+Blazegraph provides several data storages. We use triple stores for
+experiments with n-ary relations, singleton properties and standard
+reification. For named graphs we use quad stores.
+
+## Neo4j
+
+## PostgreSQL
