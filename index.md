@@ -14,12 +14,10 @@ suggestions about the experiments, please contact us.
 
 # Code and results
 
-All the code used to run the experiments is tracked in the git repository
+All the code used to run the experiments and the results is tracked in the
+git repository
 [wikidata-experiments](https://bitbucket.org/danielhz/wikidata-experiments).
-Similarly, all the results, are published in the repository
-[wikidata-experiments-results](https://bitbucket.org/danielhz/wikidata-experiments-results).
-
-These repositories include the code necessary to:
+This code allows to:
 
 * Translate the data to different models used in the experiments.
 * Load the data into the respective databases.
