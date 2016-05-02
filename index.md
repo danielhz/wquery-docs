@@ -12,6 +12,21 @@ Carlos Rojas and Enzo Zerega).
 *Note:* This document is in writing process. If you have questions or
 suggestions about the experiments, please contact us.
 
+# Code and results
+
+All the code used to run the experiments is tracked in the git repository
+[wikidata-experiments](https://bitbucket.org/danielhz/wikidata-experiments).
+Similarly, all the results, are published in the repository
+[wikidata-experiments-results](https://bitbucket.org/danielhz/wikidata-experiments-results).
+
+These repositories include the code necessary to:
+
+* Translate the data to different models used in the experiments.
+* Load the data into the respective databases.
+* Clean and fix the data.
+* Generate parameters for queries that are generated randomly.
+* Run the experiments.
+
 # Experimental settings
 
 **Machine:** All experiments were run on a single machine with 2× Intel Xeon
