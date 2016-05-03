@@ -12,6 +12,11 @@ Carlos Rojas and Enzo Zerega).
 *Note:* This document is in writing process. If you have questions or
 suggestions about the experiments, please contact us.
 
+# The data
+
+All experiments are done using the dump of Wikidata published on January 04,
+2017.
+
 # Code and results
 
 All the code used to run the experiments and the results is tracked in the
@@ -91,8 +96,7 @@ recommended for a machine with 32GB of memory (as our machine has).
 The property `MaxQueryCostEstimationTime` indicates the maximum estimated time
 for a query. If the engine estimates that a query will long more that this
 value, then it will not evaluate it. We set this property to 0, that means that
-no estimation limits will be considered applied, i.e., all queries will be
-evaluated.
+no estimation limits are considered applied, i.e., all queries are evaluated.
 
 Finally, the `MaxQueryExecutionTime` is the timeout for query execution.
 Queries that exceed this timeout are aborted in runtime.
