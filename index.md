@@ -20,7 +20,7 @@ January 04, 2017. The original dump was downloaded from the
 the Wikimedia Foundation. However, the contains in this folder are frequently
 updated and old dumps are discarded. Thus, to make this experiment repeatable
 we publish the data
-[here](http://datadumps.daniel.degu.cl/wikidata-20160104.tar.gz).
+[here](http://datadumps.daniel.degu.cl/wikidata-20160104.json.gz).
 
 # Code and results
 
