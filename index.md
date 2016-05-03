@@ -35,6 +35,20 @@ This code allows to:
 * Generate parameters for queries that are generated randomly.
 * Run the experiments.
 
+# Licence
+
+All our code is published under the
+[Creative Commons CC0 Licence](https://creativecommons.org/publicdomain/zero/1.0/), that is, the same licence
+used for the data. All of the engines used in this experiments are
+distributed under open licences. PostgreSQL uses the
+[PostgreSQL Licence](https://opensource.org/licenses/postgresql),
+Virtuoso Opensource uses the
+[GPLv2 Licence](https://github.com/openlink/virtuoso-opensource/blob/develop/7/LICENSE),
+Blazegraph uses the
+[GPLv2 Licence](https://www.blazegraph.com/services/blazegraph-licensing/)
+licence and Neo4j Community Edition uses the
+[GPLv3 Licence](http://neo4j.com/licensing/).
+
 # Experimental settings
 
 **Machine:** All experiments were run on a single machine with 2× Intel Xeon
