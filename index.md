@@ -14,8 +14,13 @@ suggestions about the experiments, please contact us.
 
 # The data
 
-All experiments are done using the dump of Wikidata published on January 04,
-2017.
+All experiments are done using the dump of Wikidata published on
+January 04, 2017. The original dump was downloaded from the
+[dumps folder](https://dumps.wikimedia.org/other/wikidata/) published by
+the Wikimedia Foundation. However, the contains in this folder are frequently
+updated and old dumps are discarded. Thus, to make this experiment repeatable
+we publish the data
+[here](http://datadumps.daniel.degu.cl/wikidata-20160104.tar.gz).
 
 # Code and results
 
