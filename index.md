@@ -151,4 +151,22 @@ reification. For named graphs we use quad stores.
 
 ## Neo4j
 
+We used Neo4J-community-2.3.1 setting a 20GB heap (i.e., `-Xmx20g`,). We used
+indexes to map from entity ids (e.g., Q42) and property ids (e.g., P1432) to
+their respective nodes. By default, Neo4J indexes nodes in the graph and their
+adjacent nodes in a linked-list style structure, such that it can navigate
+from a node to its neighbour(s) along a specific edge without having to refer
+back to the index.
+
 ## PostgreSQL
+
+We used PostgreSQL 9.1.20 set with
+
+```
+maintenance_work_mem = 1920MB
+shared_buffers       = 7680MB
+```
+
+A secondary index (i.e. B-tree) was set for each
+attribute that stores either entities, properties or data values (e.g. dates)
+from Wikidata.
