@@ -9,15 +9,12 @@ This pages aims to make repeatable the experiments described in the paper
 [Cristian Riveros](http://web.ing.puc.cl/~criveros/),
 Carlos Rojas and Enzo Zerega).
 
-*Note:* This document is in writing process. If you have questions or
-suggestions about the experiments, please contact us.
-
 # Additional resources
 
 Resources that complement the submited paper are:
 
-* This document (https://dx.doi.org/10.6084/m9.figshare.3219217.v3).
-* The code and results (https://bitbucket.org/danielhz/wikidata-experiments).
+* This document (<https://dx.doi.org/10.6084/m9.figshare.3219217.v3>).
+* The code and results (<https://bitbucket.org/danielhz/wikidata-experiments>).
 * The data (currently available [here](http://datadumps.daniel.degu.cl/wikidata-20160104.json.gz)).
 
 # The data
@@ -119,7 +116,8 @@ MaxQueryExecutionTime      = 60
 ```
 
 The values for the properties `NumberOfBuffers` and `MaxDirtyBuffers` are the
-recommended for a machine with 32GB of memory (as our machine has).
+recommended in the configuration file for a machine with 32GB of memory
+(as our machine has).
 
 The property `MaxQueryCostEstimationTime` indicates the maximum estimated time
 for a query. If the engine estimates that a query will long more that this
@@ -131,10 +129,17 @@ Queries that exceed this timeout are aborted in runtime.
 
 ## Blazegraph
 
-Blazegraph runs on top of the Java Virtual Machine (JVM). Thus, some parameters
-are added into the command line to improve the resource usage of the process.
+We use Blazegraph 2.1.0 Community Edition with Java 7. We use the Java
+implementation distributed by ORACLE
+(Java(TM) SE Runtime Environment build 1.7.0_80-b15).
+
+Some parameters are added into the command line to improve the resource
+usage of the process.
 We set the JVM heap to 6GB and we use the G1 garbage collector
 off the Hostpot JVM (The JVM provides several garbage collectors).
+The
+[documentation](https://wiki.blazegraph.com/wiki/index.php/PerformanceOptimization)
+recommends these parameters.
 
 We use the `exec` primitive in a Ruby script to start Blazegraph
 with the following parameters:
@@ -149,10 +154,10 @@ exec(['java', 'blazegraph'],
   'blazegraph.jar')
 ```
 
-The override.xml file define a timeout of 60 seconds for query execution. And
-the server.properties define the parameters of the execution and properties of
-the storage. Both configuration files can be found in the code repository of
-this experiments.
+The `override.xml` file define a timeout of 60 seconds for query execution.
+And the server.properties define the parameters of the execution and properties
+of the storage. Both configuration files can be found in the code repository
+of our experiments.
 
 Blazegraph provides several data storages. We use triple stores for
 experiments with n-ary relations, singleton properties and standard
@@ -160,22 +165,47 @@ reification. For named graphs we use quad stores.
 
 ## Neo4j
 
-We used Neo4J-community-2.3.1 setting a 20GB heap (i.e., `-Xmx20g`,). We used
-indexes to map from entity ids (e.g., Q42) and property ids (e.g., P1432) to
-their respective nodes. By default, Neo4J indexes nodes in the graph and their
-adjacent nodes in a linked-list style structure, such that it can navigate
-from a node to its neighbour(s) along a specific edge without having to refer
-back to the index.
+We used Neo4J-community-2.3.1 with Java 7, using the distribution
+available in the system
+(OpenJDK Runtime Environment (IcedTea 2.6.6)).
+
+Two databases were created, one with all the data of the JSON dump and the
+other without the Labels, Aliases and Descriptions of Wikidata entities, in
+order to make the nodes lighter.
+
+We created indexes on labels `:Item(id)`, `:Property(id)` and `:Entity(id)`.
+To map from entity ids (e.g., Q42) and property ids (e.g., P1432) to their
+respective nodes.
+
+The following variables are set in `conf/neo4j-wrapper.conf` a 20GB heap:
+
+```
+wrapper.java.initmemory = 20480
+wrapper.java.maxmemory  = 20480
+```
+
+Also we set the open file descriptor limit to 40.000 as is recommended in
+the Neo4j documentation.
 
 ## PostgreSQL
 
-We used PostgreSQL 9.1.20 set with
+We used PostgreSQL 9.1.20 with the folowing variables set in the
+`postgres.conf`:
 
 ```
-maintenance_work_mem = 1920MB
-shared_buffers       = 7680MB
+maintenance_work_mem          = 1920MB
+shared_buffers                = 7680MB
+effective_cache_size          = 22GB
+default_transaction_isolation = 'read uncommitted'
 ```
 
-A secondary index (i.e. B-tree) was set for each
-attribute that stores either entities, properties or data values (e.g. dates)
-from Wikidata.
+We use the recommended values for properties `maintenance_work_mem`,
+`shared_buffers` and `effective_cache_size` in a machine like ours. We set
+the lowest of isolation where transactions are isolated only enough to ensure
+that physically corrupt data is not read.
+
+We set a B-tree index for primary keys. By default PostgreSQL do not set
+any index for foreign keys because these are used for consistency and not
+for performance. We create a secondary index for every foreign keys in the
+model and for each attribute that stores either entities, properties or data
+values (e.g. dates) from Wikidata.
