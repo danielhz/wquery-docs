@@ -12,6 +12,14 @@ Carlos Rojas and Enzo Zerega).
 *Note:* This document is in writing process. If you have questions or
 suggestions about the experiments, please contact us.
 
+# Additional resources
+
+Resources that complement the submited paper are:
+
+* This document (https://dx.doi.org/10.6084/m9.figshare.3219217.v3).
+* The code and results (https://bitbucket.org/danielhz/wikidata-experiments).
+* The data (currently available [here](http://datadumps.daniel.degu.cl/wikidata-20160104.json.gz)).
+
 # The data
 
 All experiments are done using the dump of Wikidata published on
