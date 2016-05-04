@@ -4,8 +4,8 @@ layout: default
 
 This pages aims to make repeatable the experiments described in the paper
 *Querying Wikidata: Comparing SPARQL, Relational and Graph Databases* (by
-[Daniel Hernández](http://www.dcc.uchile.cl/~dhernand/),
-[Aidan Hogan](http://www.dcc.uchile.cl/~ahogan/),
+[Daniel Hernández](http://users.dcc.uchile.cl/~dhernand/),
+[Aidan Hogan](http://users.dcc.uchile.cl/~ahogan/),
 [Cristian Riveros](http://web.ing.puc.cl/~criveros/),
 Carlos Rojas and Enzo Zerega).
 
@@ -19,8 +19,9 @@ January 04, 2017. The original dump was downloaded from the
 [dumps folder](https://dumps.wikimedia.org/other/wikidata/) published by
 the Wikimedia Foundation. However, the contains in this folder are frequently
 updated and old dumps are discarded. Thus, to make this experiment repeatable
-we publish the data
+we publish temporally the data
 [here](http://datadumps.daniel.degu.cl/wikidata-20160104.json.gz).
+Currently we are loading the data into https://figshare.com/.
 
 # Code and results
 
