@@ -93,6 +93,9 @@ schema in RDF experiments.
 
 ## Virtuoso
 
+We use Virtuoso Opensource Edition 7.2.1, compiled from
+[the source](https://github.com/openlink/virtuoso-opensource/tree/v7.2.4.1).
+
 For each `$SCHEMA` there is a directory
 `$WD_HOME/dbfiles/virtuoso/db-$SCHEMA-1`. Initially, this folder contains
 only a file `virtuoso.ini` inside.
@@ -213,7 +216,3 @@ any index for foreign keys because these are used for consistency and not
 for performance. We create a secondary index for every foreign keys in the
 model and for each attribute that stores either entities, properties or data
 values (e.g. dates) from Wikidata.
-
-# Queries
-
-## Quin queries
