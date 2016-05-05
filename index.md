@@ -69,7 +69,7 @@ the data.
 **User:** All experiments will be run for a user identified as `$USER` which
 home is `/home/$USER`. Also, `$USER` is in the `sudo` group.
 
-**RDF code:** Code of experiments that use the RDF data model is tracked in
+**Code:** Code of experiments that use the RDF data model is tracked in
 [a git repository](https://bitbucket.org/danielhz/wikidata-experiments).
 `$USER` runs the following command inside the `/home/$USER` folder
 to get this code.
@@ -185,7 +185,7 @@ wrapper.java.maxmemory  = 20480
 ```
 
 Also we set the open file descriptor limit to 40.000 as is recommended in
-the Neo4j documentation.
+the [Neo4j documentation](http://neo4j.com/docs/stable/performance-guide.html#_setting_the_number_of_open_files).
 
 ## PostgreSQL
 
@@ -199,8 +199,12 @@ effective_cache_size          = 22GB
 default_transaction_isolation = 'read uncommitted'
 ```
 
-We use the recommended values for properties `maintenance_work_mem`,
-`shared_buffers` and `effective_cache_size` in a machine like ours. We set
+We use [pgtune](https://github.com/gregs1104/pgtune#readme), an script to
+automatically generate a configuration for PostgresSQL in our server.
+This script is based on the recommendations in the
+[PostgresSQL Wiki](https://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server)
+and set the values of properties `maintenance_work_mem`,
+`shared_buffers` and `effective_cache_size`. Also, we set
 the lowest of isolation where transactions are isolated only enough to ensure
 that physically corrupt data is not read.
 
@@ -209,3 +213,7 @@ any index for foreign keys because these are used for consistency and not
 for performance. We create a secondary index for every foreign keys in the
 model and for each attribute that stores either entities, properties or data
 values (e.g. dates) from Wikidata.
+
+# Queries
+
+## Quin queries
