@@ -93,8 +93,8 @@ schema in RDF experiments.
 
 ## Virtuoso
 
-We use Virtuoso Opensource Edition 7.2.1, compiled from
-[the source](https://github.com/openlink/virtuoso-opensource/tree/v7.2.4.1).
+We used Virtuoso Open Source Edition (7.2.3-dev.3215-pthreads), compiled from
+[the source](https://github.com/openlink/virtuoso-opensource/).
 
 For each `$SCHEMA` there is a directory
 `$WD_HOME/dbfiles/virtuoso/db-$SCHEMA-1`. Initially, this folder contains
@@ -132,7 +132,7 @@ Queries that exceed this timeout are aborted in runtime.
 
 ## Blazegraph
 
-We use Blazegraph 2.1.0 Community Edition with Java 7. We use the Java
+We used Blazegraph 2.1.0 Community Edition with Java 7. We use the Java
 implementation distributed by ORACLE
 (Java(TM) SE Runtime Environment build 1.7.0_80-b15).
 
@@ -202,7 +202,7 @@ effective_cache_size          = 22GB
 default_transaction_isolation = 'read uncommitted'
 ```
 
-We use [pgtune](https://github.com/gregs1104/pgtune#readme), an script to
+We used [pgtune](https://github.com/gregs1104/pgtune#readme), an script to
 automatically generate a configuration for PostgresSQL in our server.
 This script is based on the recommendations in the
 [PostgresSQL Wiki](https://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server)
