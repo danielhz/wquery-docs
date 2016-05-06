@@ -15,7 +15,7 @@ Resources that complement the submited paper are:
 
 * This document (<https://dx.doi.org/10.6084/m9.figshare.3219217.v3>).
 * The code and results (<https://bitbucket.org/danielhz/wikidata-experiments>).
-* The data (currently available [here](http://datadumps.daniel.degu.cl/wikidata-20160104.json.gz)).
+* The data (<https://dx.doi.org/10.6084/m9.figshare.3208498.v1>).
 
 # The data
 
@@ -24,9 +24,7 @@ January 04, 2017. The original dump was downloaded from the
 [dumps folder](https://dumps.wikimedia.org/other/wikidata/) published by
 the Wikimedia Foundation. However, the contains in this folder are frequently
 updated and old dumps are discarded. Thus, to make this experiment repeatable
-we publish temporally the data
-[here](http://datadumps.daniel.degu.cl/wikidata-20160104.json.gz).
-Currently we are loading the data into https://figshare.com/.
+we [archive](https://dx.doi.org/10.6084/m9.figshare.3208498.v1) the dump used.
 
 # Code and results
 
@@ -41,19 +39,21 @@ This code allows to:
 * Generate parameters for queries that are generated randomly.
 * Run the experiments.
 
-# Licence
+# License
 
-All our code is published under the
-[Creative Commons CC0 Licence](https://creativecommons.org/publicdomain/zero/1.0/), that is, the same licence
-used for the data. All of the engines used in this experiments are
-distributed under open licences. PostgreSQL uses the
-[PostgreSQL Licence](https://opensource.org/licenses/postgresql),
+All our code and documentation is published under the
+[Creative Commons CC-BY License](http://creativecommons.org/licenses/by/4.0/).
+The Wikidata dump is published under
+[Creative Commons CC0 License](https://creativecommons.org/publicdomain/zero/1.0/).
+All of the engines used in this experiments are
+distributed under open licenses. PostgreSQL uses the
+[PostgreSQL License](https://opensource.org/licenses/postgresql),
 Virtuoso Opensource uses the
 [GPLv2 Licence](https://github.com/openlink/virtuoso-opensource/blob/develop/7/LICENSE),
 Blazegraph uses the
-[GPLv2 Licence](https://www.blazegraph.com/services/blazegraph-licensing/)
+[GPLv2 License](https://www.blazegraph.com/services/blazegraph-licensing/)
 licence and Neo4j Community Edition uses the
-[GPLv3 Licence](http://neo4j.com/licensing/).
+[GPLv3 License](http://neo4j.com/licensing/).
 
 # Experimental settings
 
@@ -196,10 +196,14 @@ We used PostgreSQL 9.1.20 with the folowing variables set in the
 `postgres.conf`:
 
 ```
+default_statistics_target     = 100
 maintenance_work_mem          = 1920MB
 shared_buffers                = 7680MB
+wal_buffers                   = 16MB
 effective_cache_size          = 22GB
+work_mem                      = 160MB
 default_transaction_isolation = 'read uncommitted'
+statement_timeout             = 60010
 ```
 
 We used [pgtune](https://github.com/gregs1104/pgtune#readme), an script to
