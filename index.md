@@ -220,3 +220,36 @@ any index for foreign keys because these are used for consistency and not
 for performance. We create a secondary index for every foreign keys in the
 model and for each attribute that stores either entities, properties or data
 values (e.g. dates) from Wikidata.
+
+## Translating the data to the RDF model
+
+Before translating the data to the RDF model we need to split the data into
+several smaller files. Thus, translating every small file is done by an
+independent process. The translating process leaks memory so splitting it
+ensure that the process ends without getting an out memory. The commands used
+to download the dataset file and split it are:
+
+```
+$ cd $WD_HOME
+$ mkdir dataset
+$ wget https://ndownloader.figshare.com/files/5037784
+$ bunzip2 -c wikidata20160104.json.bzip | split -d -a 3 -C 100000000
+$ rename '/$/.json/' x*
+$ gzip x*.json
+$ rm wikidata20160104.json.bzip
+```
+
+Then, we are ready to use the translating Ruby script.
+
+```
+$ cd $WD_HOME
+$ translation/translate_all.rb dataset/
+```
+
+Note that the argument `/dataset` is the directory where the files of
+the dataset are.
+
+After the commands above, several n-quad files with the keywords `naryrel`,
+`ngraphs`, `sgprop` and `stdreif` are created. For example, the file
+`x000.json.gz` is translated into the files `x000-naryrel.nq.gz`,
+`x000-ngraphs.nq.gz`, `x000-sgprop.nq.gz` and `x000-stdreif.nq.gz`.
