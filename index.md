@@ -275,3 +275,30 @@ to the results obtained for the bitmask key 01110 using the Blazegraph engine.
 Results for the quin benchmark are published in the folder `results/quins` of
 the repository. Similarly, the results for the experiments with snowflake
 structure are published in the folder `results/paths`.
+
+## Quin queries
+
+Quin queries are based in a quin with the following components:
+
+- `?x0` Item (s).
+- `?x1` Claim property (p).
+- `?x2` Property value (o).
+- `?x3` Qualifier property (qp).
+- `?x4` Qualifier value (qv).
+
+For each bitmask a file with 300 quins is used. For example, the quins for the
+the bitmask 01110 are in the CSV file `query_parameters/quins/quins_01110.csv`
+of the repository.
+
+```
+?x0 P2239 Q21402571 P636 ?x4
+?x0 P39 Q17320547 P1366 ?x4
+?x0 P19 Q60 P131 ?x4
+?x0 P197 Q2655155 P81 ?x4
+?x0 P156 Q820031 P276 ?x4
+```
+
+Note that the variables `?x1` to `?x3` are replaced with constants because
+the bitmask contains a 1 in these positions.
+
+## Snowflake queries
