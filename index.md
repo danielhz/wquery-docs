@@ -236,7 +236,7 @@ $ wget https://ndownloader.figshare.com/files/5037784
 $ bunzip2 -c wikidata20160104.json.bzip | split -d -a 3 -C 100000000
 $ rename '/$/.json/' x*
 $ gzip x*.json
-$ rm wikidata20160104.json.bzip
+$ rm wikidata20160104.json.bz2
 ```
 
 Then, we are ready to use the translating Ruby script.
@@ -253,3 +253,25 @@ After the commands above, several n-quad files with the keywords `naryrel`,
 `ngraphs`, `sgprop` and `stdreif` are created. For example, the file
 `x000.json.gz` is translated into the files `x000-naryrel.nq.gz`,
 `x000-ngraphs.nq.gz`, `x000-sgprop.nq.gz` and `x000-stdreif.nq.gz`.
+
+## Running the benchmarks
+
+The RDF benchmarks use a configuration file containing the parameters that
+are necessary to run each experiment.
+
+```
+$ bin/run_quins_benchmark config/virtuoso.rb
+$ bin/run_quins_benchmark config/blazegraph.rb
+$ bin/run_paths_benchmark config/paths_virtuoso.rb
+$ bin/run_paths_benchmark config/paths_blazegraph.rb
+```
+
+After running these scripts, a CSV file is created for each set of queries.
+In the case of quins, each query file contains a bitmask key that indicates
+what quin components are variables (0) and what are considered constant (1).
+For example, the file `results_blazegraph_onaryrel_01110.csv` correspond
+to the results obtained for the bitmask key 01110 using the Blazegraph engine.
+
+Results for the quin benchmark are published in the folder `results/quins` of
+the repository. Similarly, the results for the experiments with snowflake
+structure are published in the folder `results/paths`.
