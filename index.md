@@ -39,6 +39,8 @@ This code allows to:
 * Generate parameters for queries that are generated randomly.
 * Run the experiments.
 
+The code is written and tested in Ruby 2.3 and Python 2.
+
 # License
 
 All our code and documentation is published under the
@@ -254,12 +256,71 @@ After the commands above, several n-quad files with the keywords `naryrel`,
 `x000.json.gz` is translated into the files `x000-naryrel.nq.gz`,
 `x000-ngraphs.nq.gz`, `x000-sgprop.nq.gz` and `x000-stdreif.nq.gz`.
 
+## Translating the data to the Neo4j data model
+
+First, it is necessary to build the language files with the language generator
+script.
+
+```
+$ cd $WD_HOME/neo4j-experiment-scripts/generate_csv
+$ python lang-generator.py
+```
+
+Then, we have two options. The first is generating the translation with all
+the language labels generated in the previous steep.
+
+```
+$ cd $WD_HOME/neo4j-experiment-scripts/generate_csv
+$ python parser.py
+```
+
+The second generate files without the language labels.
+
+```
+$ cd $WD_HOME/neo4j-experiment-scripts/generate_csv
+$ python parser-light.py
+```
+
+Note: You need to change the paths for files as they are in your file system.
+
+A the end of the parsing process several CSV files are generated. You can
+load these files into Neo4j using the `neo4j-import` command.
+
+```
+$ export CSV_PATH=/path/to/csv/folder
+$ export NEO4J_PATH=/path/to/neo4j/folder
+$ $NEO4J_PATH/bin/neo4j-import \
+   --into $NEO4J_PATH/data/graph.db \
+   --nodes $CSV_PATH/entity.csv \
+   --nodes:String:Value $CSV_PATH/string.csv \
+   --nodes:Time:Value $CSV_PATH/time.csv \
+   --nodes:Quantity:Value $CSV_PATH/quantity.csv \
+   --nodes:Qualifier $CSV_PATH/qualifiers.csv \
+   --nodes:Reference $CSV_PATH/references.csv \
+   --nodes:Claim $CSV_PATH/claims.csv \
+   --nodes:Url:Value $CSV_PATH/url.csv \
+   --nodes:MonolingualText:Value $CSV_PATH/monolingual.csv \
+   --nodes:GlobeCoordinate:Value $CSV_PATH/globe.csv \
+   --nodes:CommonsMedia:Value $CSV_PATH/commons.csv \
+   --relationships $CSV_PATH/relationships.csv \
+   --bad-tolerance 999999999
+```
+
+After loading the data, indexes are created using the Neo4j console.
+
+```
+CREATE INDEX ON :Entity(id);
+CREATE INDEX ON :Item(id);
+CREATE INDEX ON :Property(id);
+```
+
 ## Running the benchmarks
 
-The RDF benchmarks use a configuration file containing the parameters that
+The SPARQL benchmarks use a configuration file containing the parameters that
 are necessary to run each experiment.
 
 ```
+$ cd $WD_HOME
 $ bin/run_quins_benchmark config/virtuoso.rb
 $ bin/run_quins_benchmark config/blazegraph.rb
 $ bin/run_paths_benchmark config/paths_virtuoso.rb
@@ -275,6 +336,20 @@ to the results obtained for the bitmask key 01110 using the Blazegraph engine.
 Results for the quin benchmark are published in the folder `results/quins` of
 the repository. Similarly, the results for the experiments with snowflake
 structure are published in the folder `results/paths`.
+
+The Cypher benchmarks are executed with the following commands:
+
+```
+$ cd $WD_HOME/neo4j-experiment-scripts/quins
+$ execute_quin_queries.sh
+$ cd $WD_HOME/neo4j-experiment-scripts/paths
+$ path1.sh
+$ path2.sh
+```
+
+These commands assume that the database files for the schema with and without
+labels are in the folders `../neo4j` and `../neo4j2`. Also, python scripts and
+arguments are in the same folder.
 
 ## Quin queries
 
@@ -349,6 +424,20 @@ WHERE { ?c rdf:subject ?s ;
 LIMIT 10000
 ```
 
+### Cypher
+
+```
+MATCH (s:Item)-[:PROP_FROM]->(c:Claim)-[:PROP_TO]->(o),
+      (c)-[:PROPERTY]->(p:Property),
+      (c)-[:QUAL_FROM]->(qn:Qualifier)-[:QUAL_TO]->(q),
+      (qn)-[:PROPERTY]->(qp:Property)
+WHERE p.id='P2239' AND
+      o.id='Q21402571' AND
+      qp.id='P636'
+RETURN s.id, q.id
+LIMIT 10000;
+```
+
 Note 3: In the RDF model, queries are generated with the `build` method of the
 class `Wikidata::QuinQueryBuilder` (see the file `lib/wikidata.rb` in the
 repository).
@@ -417,14 +506,14 @@ PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX p: <http://www.wikidata.org/prop/>
 SELECT ?x0 ?x1 ?x1y0 ?x2 ?x2y0 ?x2y1
 WHERE {
-  GRAPH ?claim_x0y0 { ?x0 p:P102 ?x0y0} .
-  GRAPH ?claim_x0y1 { ?x0 p:P735 wd:Q4925477} .
-  GRAPH ?claim_x0y2 { ?x0 p:P31 ?x0y2} .
-  GRAPH ?claim_x0 { ?x0 p:P27 ?x1} .
-  GRAPH ?claim_x1y0 { ?x1 p:P1792 ?x1y0} .
-  GRAPH ?claim_x1 { ?x1 p:P530 ?x2} .
-  GRAPH ?claim_x2y0 { ?x2 p:P1343 ?x2y0} .
-  GRAPH ?claim_x2y1 { ?x2 p:P1792 ?x2y1} . }
+  GRAPH ?claim_x0y0 { ?x0 p:P102 ?x0y0 } .
+  GRAPH ?claim_x0y1 { ?x0 p:P735 wd:Q4925477 } .
+  GRAPH ?claim_x0y2 { ?x0 p:P31 ?x0y2 } .
+  GRAPH ?claim_x0 { ?x0 p:P27 ?x1 } .
+  GRAPH ?claim_x1y0 { ?x1 p:P1792 ?x1y0 } .
+  GRAPH ?claim_x1 { ?x1 p:P530 ?x2 } .
+  GRAPH ?claim_x2y0 { ?x2 p:P1343 ?x2y0 } .
+  GRAPH ?claim_x2y1 { ?x2 p:P1792 ?x2y1 } . }
 LIMIT 10000
 ```
 
@@ -482,6 +571,31 @@ WHERE {
 LIMIT 10000
 ```
 
+### Cypher
+
+```
+MATCH (x0:Item)-[:PROP_FROM]->(c0:Claim)-[:PROP_TO]->(x1:Item),
+      (c0)-[:PROPERTY]->(:Property {id:"P102"}),
+      (x0)-[:PROP_FROM]->(cx0y0:Claim)-[:PROP_TO]->(x0y0:Item),
+      (cx0y0)-[:PROPERTY]->(:Property {id:"P102"}),
+      (x0)-[:PROP_FROM]->(cx0y1:Claim)-[:PROP_TO]->(x0y1:Item {id:"Q4925477"}),
+      (cx0y1)-[:PROPERTY]->(:Property {id:"P735"}),
+      (x0)-[:PROP_FROM]->(cx0y2:Claim)-[:PROP_TO]->(x0y2:Item),
+      (cx0y2)-[:PROPERTY]->(:Property {id:"P31"}),
+      (x1:Item)-[:PROP_FROM]->(c1:Claim)-[:PROP_TO]->(x2:Item),
+      (c1)-[:PROPERTY]->(:Property {id:"P530"}),
+      (x1)-[:PROP_FROM]->(cx1y0:Claim)-[:PROP_TO]->(x1y0:Item),
+      (cx1y0)-[:PROPERTY]->(:Property {id:"P1792"}),
+      (x2)-[:PROP_FROM]->(cx2y0:Claim)-[:PROP_TO]->(x2y0:Item),
+      (cx2y0)-[:PROPERTY]->(:Property {id:"1343"}),
+      (x2)-[:PROP_FROM]->(cx2y1:Claim)-[:PROP_TO]->(x2y1:Item),
+      (cx2y1)-[:PROPERTY]->(:Property {id:"1792"})
+RETURN x0.id x1.id x1y0.id x2.id x2y0.id x2y1.id
+LIMIT 10000;
+```
+
+### Notes
+
 Note 4: In the RDF model, queries are generated with the `build` method of the
 class `Wikidata::PathQueryBuilder` (see the file `lib/wikidata.rb` in the
 repository).
@@ -499,3 +613,77 @@ path = [
 query_builder = Wikidata::PathQueryBuilder.new :stdreif
 query = query_builder.build path, 10000
 ```
+
+## Loading times and database sizes
+
+###  RDF data
+
+The following table present the statistics of data in each schema.
+
+|---------+------------|
+| Model   | Statements |
+|:--------+-----------:|
+| naryrel |  563678588 |
+| ngraphs |  482371357 |
+| sgprop  |  563676547 |
+| stdreif |  644981737 |
+|---------+------------|
+
+The following table presents the loading times of Virtuoso for each schema.
+
+|------------------+-------+-------+------+-------+
+|                  |naryrel|ngraphs|sgprop|stdreif|
+|------------------+------:+------:+-----:+------:|
+|Loading files (s) |  8265 | 10844 | 8344 |  8818 |
+|Indexing (s)      |  5701 |  4023 | 5514 |  5118 |
+|Total (s)         | 13966 | 14867 |13858 | 13936 |
+|------------------+-------+-------+------+-------+
+
+Times and data sizes used by Virtuoso are summarized in the following table.
+
+|---------+--------------+-------+-------------------+---------|
+| Model   | Elapsed time |       | Size              |         |
+|:--------+-------------:+------:|------------------:+--------:|
+| naryrel |      13966 s | 3.9 h | 49169825792 bytes |     46G |
+| ngraphs |      14867 s | 4.1 h | 50413436928 bytes |     47G |
+| sgprop  |      13858 s | 3.9 h | 49715085312 bytes |     47G |
+| stdreif |      13936 s | 3.9 h | 49027219456 bytes |     46G |
+|---------+--------------+-------+-------------------+---------|
+
+The following table presents the loading times and space used by Blazegraph
+for each schema.
+
+|---------+--------------+--------+-------------------+---------|
+| Model   | Elapsed time |        | Size              |         |
+|:--------+-------------:+-------:|------------------:+--------:|
+| naryrel | 105693.640 s | 23.4 h | 65205960704 bytes |     61G |
+| ngraphs | 240486.333 s | 66.8 h |127813812224 bytes |    120G |
+| sgprop  |  93865.713 s | 26.1 h | 65205960704 bytes |     61G |
+| stdreif | 107242.764 s | 29.8 h | 65205960704 bytes |     61G |
+|---------+--------------+--------+-------------------+---------|
+
+Note that in the case of the named graphs schema, we use a quad store backend.
+On the other hand, in the other schemas we use a triple store backend.
+
+### Neo4j
+
+The size of the database with labels before creating the indexes is of 47 GB.
+It contains:
+
+* 214348455 nodes.
+* 435080654 relationships.
+* 661150129 properties.
+
+The size of the database without the indexes is of 32 GB. It contains:
+
+* 214348455 nodes
+* 435080654 relationships
+* 409258592 properties
+
+The times used to create the indexes are presented in the table below.
+
+| Index          | Time           |
+| :------------- | -------------: |
+| Entities       | 5min 20s       |
+| Item           | 5min 10s       |
+| Property       | 1min 20s       |
