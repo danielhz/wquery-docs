@@ -101,7 +101,7 @@ _Note_: Each such query is generated from the data and thus will produce non-emp
 _Note_: The variables `?x1` to `?x3` are replaced with constants because
 the bitmask contains a 1 in these positions.
 
-_Note_: The property value and the qualifier value are value items.
+_Note_: The property value and the qualifier value are value items (not datatype values).
 
 Each quin will then be converted into a "concrete query" for the particular
 setting, where we will momentarily present examples for the previous `01110` quin.
@@ -428,7 +428,7 @@ query = query_builder.build path, 10000
 
 # <a name="setting"></a> Experimental settings
 
-Here we briefly describe the specific setting in which we ran experiments.
+Here we  describe the specific setting in which we ran experiments for the paper.
 
 **Machine:** All experiments were run on a single machine with 2× Intel Xeon
 Six Core E5-2609 V3 CPUs, 32GB of RAM, and 2× 1TB Seagate 7200 RPM
@@ -560,18 +560,18 @@ the files `x000-naryrel.nq.gz`, `x000-ngraphs.nq.gz`,
 _Note_: We use the environment name `$SCHEMA` for the current schema in RDF experiments,
 which can be one of `naryrel`, `ngraphs`, `sgprop` or `stdreif`.
 
-## <a name="configure-virtuoso"> 5. Configure Virtuoso
+## <a name="configure-virtuoso"></a> 5. Configure Virtuoso
 
 We used Virtuoso Open Source Edition (7.2.3-dev.3215-pthreads), compiled from
 [the source](https://github.com/openlink/virtuoso-opensource/).
 
 For each `$SCHEMA` there is a directory
 `$WD_HOME/dbfiles/virtuoso/db-$SCHEMA-1`. Initially, this folder contains
-only a file `virtuoso.ini` inside.
+only the file `virtuoso.ini` inside.
 
 By default, Virtuoso stores the data in a folder in the `/` partition
-(that has not enough space). Inside this folder we create a symbolic link to
-the database folder of each `$SCHEMA`.
+(that does not have enough space in our setting). Inside this folder 
+we create a symbolic link to the database folder of each `$SCHEMA`.
 
 ```
 $ cd /usr/local/virtuoso-opensource/var/lib/virtuoso/
@@ -594,13 +594,13 @@ recommended in the configuration file for a machine with 32GB of memory
 The property `MaxQueryCostEstimationTime` indicates the maximum estimated time
 for a query. If the engine estimates that a query will take longer than this
 value, then it will not try to evaluate it. We set this property to 0, which 
-means that no estimation limits are considered applied; i.e., Virtuoso will attempt
+means that no estimation limits are applied; i.e., Virtuoso will attempt
 to evaluate all queries.
 
 Finally, the `MaxQueryExecutionTime` is the timeout for query execution.
 Queries that exceed this timeout are aborted at runtime.
 
-_Default graph_: In Virtuoso the default dataset is always
+_Note_: In Virtuoso the default dataset is always
 assumed to be the union of all named graphs. Thus, no specific configuration is
 needed to get this behavior with the named graphs schema.
 
@@ -632,12 +632,12 @@ cd $WD_HOME/loading/virtuoso/
 ./load_data.rb
 ```
 
-## <a name="configure-blazegraph"> 7. Configure Blazegraph
+## <a name="configure-blazegraph"></a> 7. Configure Blazegraph
 
 We used Blazegraph 2.1.0 Community Edition with Java 7. We use the Java
 implementation distributed by ORACLE (Java(TM) SE Runtime Environment build 1.7.0_80-b15).
 
-Some parameters are added into the command line to improve the resource
+Some parameters are added to the command line to improve the resource
 usage of the process. We set the JVM heap to 6GB and we use the G1 garbage collector
 of the Hostpot JVM (The JVM provides several garbage collectors):
 the [documentation](https://wiki.blazegraph.com/wiki/index.php/PerformanceOptimization)
@@ -656,13 +656,13 @@ exec(['java', 'blazegraph'],
   'blazegraph.jar')
 ```
 
-The `override.xml` file define a timeout of 60 seconds for query execution.
-And the `server.properties` file defines the parameters of the execution and
+The `override.xml` file define a timeout of 60 seconds for query execution 
+and the `server.properties` file defines the parameters of the execution and
 properties of the storage. Both configuration files can be found in the
 [code repository](https://bitbucket.org/danielhz/wikidata-experiments/src/0389b993f34afaab2fff36411e76ce33ef86465b/dbfiles/blazegraph/?at=master)
 of our experiments.
 
-_Default graph_: In Blazegraph the default dataset is always
+_Note_: In Blazegraph the default dataset is always
 assumed to be the union of all named graphs. Thus, no specific configuration is
 needed to get this behavior with the named graphs schema.
 
@@ -700,6 +700,14 @@ Each file-name contains a reference to the engine, representation and query-set.
 For example, the file `results_blazegraph_onaryrel_01110.csv` corresponds
 to the results obtained for [atomic quin queries with bitmask key `01110`](#quin-queries) 
 using the Blazegraph engine for the [n-ary relations](#translate-the-data-to-rdf) representation.
+
+The following is an example line from the results:
+
+```
+naryrel,path_1,0,11.50489629,125,200
+```
+
+We see, respectively, the RDF schema, the type of query run, the ID of the specific query, the time taken, the number of results returned (if not timeout) and a 200 code indicating success (or `timeout` if a timeout is reached).
 
 ## <a name="translate-the-data-to-the-sql-data-model"></a>10. Translate the data to the relational model
 
@@ -844,7 +852,7 @@ ruby script_commands.rb
 
 ## <a name="run-experiments-in-postgresql"></a>13. Generate SQL queries and run experiments in PostgreSQL
 
-The quins file must be in the same file as the script that executes the
+The quins file must be in the same folder as the script that executes the
 quins benchmark. For example, the experiment for the bitmask `10000` is
 executed with the commands:
 
@@ -975,7 +983,7 @@ caching policies of the operating system.
 Raw results of query runtimes are published in the folder `results`
 in [the code repository](https://bitbucket.org/danielhz/wikidata-experiments).
 
-In what follows, we present the ellapsed times and the size of the
+In what follows, we present the elapsed times and the size of the
 database after loading the data.
 
 ## Loading times and database sizes
@@ -1038,7 +1046,7 @@ It contains:
 * 435080654 relationships.
 * 661150129 properties.
 
-The size of the database without the indexes is of 32 GB. It contains:
+The size of the database without the indexes is 32 GB. It contains:
 
 * 214348455 nodes
 * 435080654 relationships
